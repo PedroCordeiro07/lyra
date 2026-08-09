@@ -64,7 +64,9 @@ public class App {
             System.out.println("4. Previous");
             System.out.println("5. Seek to position");
             System.out.println("6. Repeat mode");
-            System.out.println(". Quit");
+            System.out.println("7. Volume");
+            System.out.println("8. Shuffle");
+            System.out.println("9. Quit");
 
             int choice = input.nextInt();
 
@@ -140,6 +142,11 @@ public class App {
                     String action = playback.shuffleModeOff(accessToken);
                     System.out.println(action);
                 }
+            }
+
+            else if (choice == 9) {
+                System.out.println("Ending playback controls");
+                break;
             }
         }
     }
