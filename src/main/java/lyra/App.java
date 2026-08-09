@@ -2,6 +2,7 @@ package lyra;
 
 import java.util.Properties;
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * Lyra, the best Spotify agent to ever exist!
@@ -9,6 +10,7 @@ import java.io.IOException;
  */
 public class App {
     public static void main(String[] args) throws IOException, InterruptedException {
+        Scanner input = new Scanner(System.in);
 
         Properties config = ConfigLoader.loadProperties();
 
@@ -46,12 +48,99 @@ public class App {
 
         tokenmanager.saveTokensAndExpiresIn(accessToken, refreshToken, expiresIn);
 
-        String loadedAccessToken = tokenmanager.loadAccessToken();
-        String loadedRefreshToken = tokenmanager.loadRefreshToken();
-        long loadExpiresIn = tokenmanager.loadExpiresIn();
+        String refreshedAccessToken = tokenmanager.refreshAccessToken(refreshToken);
 
-        System.out.println(loadedAccessToken);
-        System.out.println(loadedRefreshToken);
-        System.out.println(loadExpiresIn);
+        tokenmanager.saveTokensAndExpiresIn(accessToken, refreshToken, expiresIn);
+
+        String loadedAccessToken = tokenmanager.loadAccessToken();
+
+        Playback playback = new Playback(loadedAccessToken);
+
+        while (true) {
+            System.out.println("Playback Controls:");
+            System.out.println("1. Pause");
+            System.out.println("2. Resume");
+            System.out.println("3. Next");
+            System.out.println("4. Previous");
+            System.out.println("5. Seek to position");
+            System.out.println("6. Repeat mode");
+            System.out.println(". Quit");
+
+            int choice = input.nextInt();
+
+            if (choice == 1) {
+                String action = playback.pause(accessToken);
+                System.out.println(action);
+            }
+
+            else if (choice == 2) {
+                String action = playback.resume(accessToken);
+                System.out.println(action);
+            }
+
+            else if (choice == 3) {
+                String action = playback.skipToNext(accessToken);
+                System.out.println(action);
+            }
+
+            else if (choice == 4) {
+                String action = playback.skipToPrevious(accessToken);
+                System.out.println(action);
+            }
+
+            else if (choice == 5) {
+                System.out.println("Enter the position you want to seek to (ms): ");
+                int position = input.nextInt();
+
+                String action = playback.seekToPosition(accessToken, position);
+                System.out.println(action);
+            }
+
+            else if (choice == 6) {
+                System.out.println("1. Repeat context ");
+                System.out.println("2. Repeat track ");
+                System.out.println("3. Repeat off ");
+                int repeatChoice = input.nextInt();
+
+                if (repeatChoice == 1) {
+                    String action = playback.setRepeatModeContext(accessToken);
+                    System.out.println(action);
+                }
+
+                else if (repeatChoice == 2) {
+                    String action = playback.setRepeatModeTrack(accessToken);
+                    System.out.println(action);
+                }
+
+                else if (repeatChoice == 3) {
+                    String action = playback.setRepeatModeOff(accessToken);
+                    System.out.println(action);
+                }
+            }
+
+            else if (choice == 7) {
+                System.out.println("Enter the volume you want to set: ");
+                int volume = input.nextInt();
+
+                String action = playback.setVolume(accessToken, volume);
+                System.out.println(action);
+            }
+
+            else if (choice == 8) {
+                System.out.println("1. Shuffle on ");
+                System.out.println("2. Shuffle off ");
+                int shuffleChoice = input.nextInt();
+
+                if (shuffleChoice == 1) {
+                    String action = playback.shuffleModeOn(accessToken);
+                    System.out.println(action);
+                }
+
+                else if (shuffleChoice == 2) {
+                    String action = playback.shuffleModeOff(accessToken);
+                    System.out.println(action);
+                }
+            }
+        }
     }
 }
