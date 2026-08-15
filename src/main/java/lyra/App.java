@@ -20,41 +20,70 @@ public class App {
 
         SpotifyAuth auth = new SpotifyAuth(clientId, clientSecret,  redirectUri);
 
-        // 1 - Start callback server
         CallBackServer callback = new CallBackServer();
         callback.start();
 
-        // 2 - Generate Spotify login URL
         String url = auth.getAuthorizationUrl();
 
         System.out.println("Open this URL to link Lyra to your account:");
         System.out.println(url);
 
-        // 3 - Wait for Spotify callback
         String authorizationCode = callback.getAuthorizationCode();
 
-        // 4 - Exchange authorization code for tokens
         String tokenResponse = auth.exchangeCodeForToken(authorizationCode);
 
         String accessToken = auth.parseAccessToken(tokenResponse);
         String refreshToken = auth.parseRefreshToken(tokenResponse);
         long expiresIn = auth.parseExpiresIn(tokenResponse);
 
-        // 5 - Use Spotify API
-        SpotifyClient spotify = new SpotifyClient(accessToken);
 
-        // 6 - Save tokens for future use
         TokenManager tokenmanager = new TokenManager(clientId, clientSecret);
-
-        tokenmanager.saveTokensAndExpiresIn(accessToken, refreshToken, expiresIn);
-
-        String refreshedAccessToken = tokenmanager.refreshAccessToken(refreshToken);
 
         tokenmanager.saveTokensAndExpiresIn(accessToken, refreshToken, expiresIn);
 
         String loadedAccessToken = tokenmanager.loadAccessToken();
 
         Playback playback = new Playback(loadedAccessToken);
+
+
+        Device device = new Device(loadedAccessToken);
+
+        String loadedRefreshToken = tokenmanager.loadRefreshToken();
+
+        String newTokenResponse = tokenmanager.refreshAccessToken(loadedRefreshToken);
+
+        String newAccessToken = auth.parseAccessToken(newTokenResponse);
+        long newExpiresIn = auth.parseExpiresIn(newTokenResponse);
+
+        tokenmanager.saveTokensAndExpiresIn(newAccessToken, loadedRefreshToken, newExpiresIn);
+
+        loadedAccessToken =  tokenmanager.loadAccessToken();
+
+        while (true) {
+            System.out.println("Device controls:");
+            System.out.println("1. To transfer the playback");
+            System.out.println("0. Quit");
+
+            int choice = input.nextInt();
+            input.nextLine(); // consume Enter
+
+            if (choice == 1) {
+                String availableDevices = device.getAvailableDevices(loadedAccessToken);
+                System.out.println(availableDevices);
+
+                System.out.println("Enter the device ID you want to transfer to:");
+                String deviceId = input.nextLine();
+
+                String action = device.transferToDevice(loadedAccessToken, deviceId);
+                System.out.println(action);
+            }
+
+            else if (choice == 0) {
+                System.out.println("Ending device controls...");
+                break;
+            }
+        }
+
 
         while (true) {
             System.out.println("Playback Controls:");
@@ -64,27 +93,29 @@ public class App {
             System.out.println("4. Previous");
             System.out.println("5. Seek to position");
             System.out.println("6. Repeat mode");
-            System.out.println(". Quit");
+            System.out.println("7. Volume");
+            System.out.println("8. Shuffle");
+            System.out.println("9. Quit");
 
             int choice = input.nextInt();
 
             if (choice == 1) {
-                String action = playback.pause(accessToken);
+                String action = playback.pause(loadedAccessToken);
                 System.out.println(action);
             }
 
             else if (choice == 2) {
-                String action = playback.resume(accessToken);
+                String action = playback.resume(loadedAccessToken);
                 System.out.println(action);
             }
 
             else if (choice == 3) {
-                String action = playback.skipToNext(accessToken);
+                String action = playback.skipToNext(loadedAccessToken);
                 System.out.println(action);
             }
 
             else if (choice == 4) {
-                String action = playback.skipToPrevious(accessToken);
+                String action = playback.skipToPrevious(loadedAccessToken);
                 System.out.println(action);
             }
 
@@ -92,7 +123,7 @@ public class App {
                 System.out.println("Enter the position you want to seek to (ms): ");
                 int position = input.nextInt();
 
-                String action = playback.seekToPosition(accessToken, position);
+                String action = playback.seekToPosition(loadedAccessToken, position);
                 System.out.println(action);
             }
 
@@ -103,17 +134,17 @@ public class App {
                 int repeatChoice = input.nextInt();
 
                 if (repeatChoice == 1) {
-                    String action = playback.setRepeatModeContext(accessToken);
+                    String action = playback.setRepeatModeContext(loadedAccessToken);
                     System.out.println(action);
                 }
 
                 else if (repeatChoice == 2) {
-                    String action = playback.setRepeatModeTrack(accessToken);
+                    String action = playback.setRepeatModeTrack(loadedAccessToken);
                     System.out.println(action);
                 }
 
                 else if (repeatChoice == 3) {
-                    String action = playback.setRepeatModeOff(accessToken);
+                    String action = playback.setRepeatModeOff(loadedAccessToken);
                     System.out.println(action);
                 }
             }
@@ -122,7 +153,7 @@ public class App {
                 System.out.println("Enter the volume you want to set: ");
                 int volume = input.nextInt();
 
-                String action = playback.setVolume(accessToken, volume);
+                String action = playback.setVolume(loadedAccessToken, volume);
                 System.out.println(action);
             }
 
@@ -132,14 +163,19 @@ public class App {
                 int shuffleChoice = input.nextInt();
 
                 if (shuffleChoice == 1) {
-                    String action = playback.shuffleModeOn(accessToken);
+                    String action = playback.shuffleModeOn(loadedAccessToken);
                     System.out.println(action);
                 }
 
                 else if (shuffleChoice == 2) {
-                    String action = playback.shuffleModeOff(accessToken);
+                    String action = playback.shuffleModeOff(loadedAccessToken);
                     System.out.println(action);
                 }
+            }
+
+            else if (choice == 9) {
+                System.out.println("Ending playback controls");
+                break;
             }
         }
     }
