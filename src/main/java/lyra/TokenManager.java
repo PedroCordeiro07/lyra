@@ -50,7 +50,7 @@ public class TokenManager {
         return response.body();
     }
 
-    public void saveTokensAndExpiresIn(String refreshToken, String accessToken, long expiresIn) throws IOException {
+    public void saveTokensAndExpiresIn(String accessToken, String refreshToken, long expiresIn) throws IOException {
         Properties token = new Properties();
 
         token.load(new FileReader("config/Tokens.properties"));

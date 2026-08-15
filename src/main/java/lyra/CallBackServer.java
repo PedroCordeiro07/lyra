@@ -21,8 +21,6 @@ public class CallBackServer {
             this.authorizationCode = query
                     .replace("code=", "");
 
-            System.out.println(authorizationCode);
-
             String response = "Lyra authorization received. You can close this window.";
 
             exchange.sendResponseHeaders(

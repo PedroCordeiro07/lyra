@@ -23,37 +23,20 @@ public class SpotifyAuth {
         this.redirectUri = redirectUri;
     }
 
-    public String getAppToken() throws IOException, InterruptedException {
-
-        HttpClient client = HttpClient.newHttpClient();
-
-        String credentials = clientId + ":" + clientSecret;
-
-        String encodedCredentials = Base64.getEncoder()
-                .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://accounts.spotify.com/api/token"))
-                .header("Authorization", "Basic " + encodedCredentials)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString("grant_type=client_credentials"))
-                .build();
-
-        HttpResponse<String> response = client.send(
-                request,
-                HttpResponse.BodyHandlers.ofString()
-        );
-
-        return response.body();
-    }
-
     public String getAuthorizationUrl() {
 
         return "https://accounts.spotify.com/authorize"
                 + "?client_id=" + clientId
                 + "&response_type=code"
                 + "&redirect_uri=" + redirectUri
-                + "&scope=user-read-currently-playing%20user-modify-playback-state";
+                + "&scope="
+                + "user-read-currently-playing%20"
+                + "user-read-playback-state%20"
+                + "user-modify-playback-state%20"
+                + "playlist-read-private%20"
+                + "playlist-modify-public%20"
+                + "playlist-modify-private%20"
+                + "user-library-read";
     }
 
 
