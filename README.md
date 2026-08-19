@@ -156,8 +156,3 @@ Playback Controls:
 8. Shuffle
 9. Quit
 ```
-
-
-## License
-
-[Choose a license, or state that the project currently has no license.]
