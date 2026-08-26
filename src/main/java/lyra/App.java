@@ -48,6 +48,8 @@ public class App {
 
         Device device = new Device(loadedAccessToken);
 
+        Search search = new Search(loadedAccessToken);
+
         String loadedRefreshToken = tokenmanager.loadRefreshToken();
 
         String newTokenResponse = tokenmanager.refreshAccessToken(loadedRefreshToken);
@@ -62,6 +64,7 @@ public class App {
         while (true) {
             System.out.println("Device controls:");
             System.out.println("1. To transfer the playback");
+            System.out.println("2. To check playback state");
             System.out.println("0. Quit");
 
             int choice = input.nextInt();
@@ -76,6 +79,11 @@ public class App {
 
                 String action = device.transferToDevice(loadedAccessToken, deviceId);
                 System.out.println(action);
+            }
+
+            else if (choice == 2) {
+                String playbackState = device.getPlaybackState(loadedAccessToken);
+                System.out.println(playbackState);
             }
 
             else if (choice == 0) {
@@ -174,6 +182,12 @@ public class App {
             }
 
             else if (choice == 9) {
+                String query = input.nextLine();
+                String action = search.searchTrack(loadedAccessToken, query);
+                System.out.println(action);
+            }
+
+            else if (choice == 0) {
                 System.out.println("Ending playback controls");
                 break;
             }

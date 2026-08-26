@@ -72,4 +72,21 @@ public class Device {
 
         return response.body();
     }
+
+    public String getPlaybackState(String accessToken) throws InterruptedException, IOException {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.spotify.com/v1/me/player"))
+                .header("Authorization", "Bearer " + accessToken)
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString()
+        );
+
+        return response.body();
+    }
 }
