@@ -1,5 +1,6 @@
 package lyra;
 
+import java.util.List;
 import java.util.Properties;
 import java.io.IOException;
 import java.util.Scanner;
@@ -68,10 +69,11 @@ public class App {
             System.out.println("0. Quit");
 
             int choice = input.nextInt();
-            input.nextLine(); // consume Enter
+            input.nextLine();
 
             if (choice == 1) {
-                String availableDevices = device.getAvailableDevices(loadedAccessToken);
+                String jsonResponse = device.getAvailableDevices(accessToken);
+                List<Device.DeviceInfo> availableDevices = device.parseAvailableDevices(jsonResponse);
                 System.out.println(availableDevices);
 
                 System.out.println("Enter the device ID you want to transfer to:");
@@ -183,6 +185,12 @@ public class App {
 
             else if (choice == 9) {
                 String query = input.nextLine();
+                String action = search.searchTrack(loadedAccessToken, query);
+                System.out.println(action);
+            }
+
+            else if (choice == 10) {
+                String query = "Grupo Menos é Mais";
                 String action = search.searchTrack(loadedAccessToken, query);
                 System.out.println(action);
             }
