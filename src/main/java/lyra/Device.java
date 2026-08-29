@@ -8,6 +8,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Device {
     private final String accessToken;
@@ -30,22 +32,31 @@ public class Device {
                 HttpResponse.BodyHandlers.ofString()
         );
 
+        return response.body();
+    }
+
+    public record DeviceInfo(String id, String name, String type, boolean isActive) {}
+
+
+    public List<DeviceInfo> parseAvailableDevices(String jsonResponse) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.body());
+        JsonNode root = mapper.readTree(jsonResponse);
+        JsonNode devicesNode = root.get("devices");
 
-        StringBuilder devices = new StringBuilder();
+        List<DeviceInfo> devices = new ArrayList<>();
 
-        for (JsonNode device : root.get("devices")) {
-            String name = device.get("name").asText();
-            String id = device.get("id").asText();
+        if (devicesNode != null && devicesNode.isArray()) {
+            for (JsonNode deviceNode : devicesNode) {
+                String id = deviceNode.get("id").asText();
+                String name = deviceNode.get("name").asText();
+                String type = deviceNode.get("type").asText();
+                boolean isActive = deviceNode.get("is_active").asBoolean();
 
-            devices.append(name)
-                    .append(" - ")
-                    .append(id)
-                    .append("\n");
+                devices.add(new DeviceInfo(id, name, type, isActive));
+            }
         }
 
-        return devices.toString();
+        return devices;
     }
 
 
@@ -63,6 +74,23 @@ public class Device {
                 .header("Authorization", "Bearer " + accessToken)
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString()
+        );
+
+        return response.body();
+    }
+
+    public String getPlaybackState(String accessToken) throws InterruptedException, IOException {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.spotify.com/v1/me/player"))
+                .header("Authorization", "Bearer " + accessToken)
+                .GET()
                 .build();
 
         HttpResponse<String> response = client.send(
