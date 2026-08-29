@@ -81,12 +81,12 @@ public class SearchPlaylist {
         return playlists;
     }
 
-    // TO DO - toString()
     public String formatArtistsResults(List<PlaylistInfo> playlists) {
         StringBuilder formattedList = new StringBuilder();
 
         for (PlaylistInfo playlist : playlists) {
             formattedList.append(playlist.toString());
+            formattedList.append("\n");
         }
         return formattedList.toString();
     }

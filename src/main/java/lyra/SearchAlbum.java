@@ -91,6 +91,7 @@ public class SearchAlbum {
 
         for (AlbumInfo album : albums) {
             formattedList.append(album.toString());
+            formattedList.append("\n");
         }
         return formattedList.toString();
     }

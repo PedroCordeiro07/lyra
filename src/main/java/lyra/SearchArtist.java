@@ -89,6 +89,7 @@ public class SearchArtist {
 
         for (ArtistInfo artist : artists) {
             formattedList.append(artist.toString());
+            formattedList.append("\n");
         }
         return formattedList.toString();
     }

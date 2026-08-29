@@ -40,6 +40,8 @@ public class SearchTrack {
                 HttpResponse.BodyHandlers.ofString()
         );
 
+        System.out.println(response.body());
+
         return response.body();
     }
 
@@ -80,12 +82,12 @@ public class SearchTrack {
     }
 
 
-    // TO DO - toString()
     public String formatTrackResults(List<TrackInfo> tracks) {
         StringBuilder formattedList = new StringBuilder();
 
         for (TrackInfo track : tracks) {
             formattedList.append(track.toString());
+            formattedList.append("\n");
         }
         return formattedList.toString();
     }
