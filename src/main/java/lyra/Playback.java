@@ -47,6 +47,33 @@ public class Playback {
         return  response.body();
     }
 
+    public String playTrack(String accessToken, String trackUri) throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+
+        String  json = """
+                {
+                    "uris": [
+                        "%s"
+                    ],
+                        "position_ms": 0
+                }
+                """.formatted(trackUri);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.spotify.com/v1/me/player/play"))
+                .header("Authorization", "Bearer " + accessToken)
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        HttpResponse<String> response = client.send(
+                request,
+                HttpResponse.BodyHandlers.ofString()
+        );
+
+        return  response.body();
+    }
+
 
     public String skipToNext(String accessToken) throws IOException, InterruptedException {
         HttpClient client = HttpClient.newHttpClient();

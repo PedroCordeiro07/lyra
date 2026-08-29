@@ -49,7 +49,7 @@ public class App {
 
         Device device = new Device(loadedAccessToken);
 
-        Search search = new Search(loadedAccessToken);
+        SearchTrack searchTrack = new SearchTrack();
 
         String loadedRefreshToken = tokenmanager.loadRefreshToken();
 
@@ -105,7 +105,9 @@ public class App {
             System.out.println("6. Repeat mode");
             System.out.println("7. Volume");
             System.out.println("8. Shuffle");
-            System.out.println("9. Quit");
+            System.out.println("9. Search");
+            System.out.println("10. Play track");
+            System.out.println("0. Quit");
 
             int choice = input.nextInt();
 
@@ -184,14 +186,19 @@ public class App {
             }
 
             else if (choice == 9) {
-                String query = input.nextLine();
-                String action = search.searchTrack(loadedAccessToken, query);
-                System.out.println(action);
+                String query = "The Beatles";
+                String action = searchTrack.searchTrack(loadedAccessToken, query);
+
+                List<SearchTrack.TrackInfo> tracks = searchTrack.parseTrackResults(action);
+
+                String formattedResponse = searchTrack.formatTrackResults(tracks);
+                System.out.println(formattedResponse);
             }
 
             else if (choice == 10) {
-                String query = "Grupo Menos é Mais";
-                String action = search.searchTrack(loadedAccessToken, query);
+                input.nextLine();
+                String trackUri = input.nextLine();
+                String action = playback.playTrack(loadedAccessToken, trackUri);
                 System.out.println(action);
             }
 
