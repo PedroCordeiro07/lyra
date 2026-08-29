@@ -84,6 +84,18 @@ public class Device {
         return response.body();
     }
 
+
+    public String formatAvailableDevicesResults(List<DeviceInfo> devices) {
+        StringBuilder formattedList = new StringBuilder();
+
+        for (DeviceInfo device : devices) {
+            formattedList.append(device.toString());
+        }
+        return formattedList.toString();
+    }
+
+
+
     public String getPlaybackState(String accessToken) throws InterruptedException, IOException {
         HttpClient client = HttpClient.newHttpClient();
 

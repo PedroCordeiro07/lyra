@@ -49,7 +49,7 @@ public class App {
 
         Device device = new Device(loadedAccessToken);
 
-        Search search = new Search(loadedAccessToken);
+        SearchTrack searchTrack = new SearchTrack();
 
         String loadedRefreshToken = tokenmanager.loadRefreshToken();
 
@@ -184,15 +184,13 @@ public class App {
             }
 
             else if (choice == 9) {
-                String query = input.nextLine();
-                String action = search.searchTrack(loadedAccessToken, query);
-                System.out.println(action);
-            }
-
-            else if (choice == 10) {
                 String query = "Grupo Menos é Mais";
-                String action = search.searchTrack(loadedAccessToken, query);
-                System.out.println(action);
+                String action = searchTrack.searchTrack(loadedAccessToken, query);
+
+                List<SearchTrack.TrackInfo> tracks = searchTrack.parseTrackResults(action);
+
+                String formattedResponse = searchTrack.formatTrackResults(tracks);
+                System.out.println(formattedResponse);
             }
 
             else if (choice == 0) {
