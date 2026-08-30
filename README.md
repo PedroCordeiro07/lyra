@@ -51,22 +51,32 @@ Full flow of Auth complete, allowing the system to successfully interact with th
 
 Playback controls complete.
 
+### v0.3 — Search Class Start
+
+Search class implemented, allowing the system to search for tracks, albums, artists, and playlists.
+
+### v0.4 — Search Classes Split
+
+Search class split into four separate classes to properly divide responsibilities.
+
+### v0.5 — Search Class Lists
+
+Search classes now parse search results into lists, with each result represented as its own object.
+
+### v0.6 — Play Track
+
+Playback class now supports playing a specific track using its Spotify URI obtained from the track search results.
+
+
 ## Roadmap
 
-### v0.3 — Search
-
-* [ ] Search for tracks
-* [ ] Search for artists
-* [ ] Search for albums
-* [ ] Search for public playlists
-
-### v0.4 — Queue
+### v0.7 — Queue
 
 * [ ] View queue
 * [ ] Add tracks to queue
 * [ ] Remove tracks from queue
 
-### v0.5 — Playlists
+### v0.8 — Playlists
 
 * [ ] Create playlists
 * [ ] Delete playlists
@@ -100,9 +110,13 @@ src/
             ├── CallBackServer.java
             ├── ConfigLoader.java
             ├── Device.java
+            ├── Playback.java
+            ├── SearchAlbum.java
+            ├── SearchArtist.java
+            ├── SearchPlaylist.java
+            ├── SearchTrack.java
             ├── SpotifyAuth.java
-            ├── TokenManager.java
-            └── Playback.java
+            └── TokenManager.java
 ```
 
 **`SpotifyAuth`** handles Spotify OAuth authorization flow, generates the permission URL, exchange the successfully authorized code for tokens and parsing the tokens response.
@@ -114,6 +128,14 @@ src/
 **`Device`** handles Spotify Connect devices and playback transfers between devices.
 
 **`Playback`** provides controls for Spotify playback, including pause, resume, skipping, seeking, volume, repeat mode, and shuffle.
+
+**`SearchAlbum`** searches albums by album or artist name, providing album information and its associated tracks.
+
+**`SearchArtist`** searches artists by name, providing information about the artist, including genres, popularity, followers, and image.
+
+**`SearchPlaylist`** searches public playlists by name, providing playlist information such as owner, description, cover, and track count.
+
+**`SearchTrack`** searches tracks by track or artist name, providing information such as duration, artists, album, cover, URI, and availability.
 
 ## Setup
 
