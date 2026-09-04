@@ -186,7 +186,7 @@ public class App {
             }
 
             else if (choice == 9) {
-                String query = "The Beatles";
+                String query = "Grupo Menos é Mais";
                 String action = searchTrack.searchTrack(loadedAccessToken, query);
 
                 List<SearchTrack.TrackInfo> tracks = searchTrack.parseTrackResults(action);

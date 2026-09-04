@@ -40,8 +40,6 @@ public class SearchTrack {
                 HttpResponse.BodyHandlers.ofString()
         );
 
-        System.out.println(response.body());
-
         return response.body();
     }
 
