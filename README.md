@@ -158,8 +158,6 @@ The following configuration files must exist inside your repository for the syst
 1. Spotify.properties -> Stores the app credentials.
 2. Tokens.properties -> Stores the tokens after the succeeded Spotify OAuth authorization.
 
-> **Important:** Never commit Spotify credentials, access tokens, refresh tokens, or other private information to the repository.
-
 ## Usage
 
 The main class currently features a straightforward loop to control the playback and available devices.
